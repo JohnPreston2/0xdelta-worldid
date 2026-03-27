@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>0xΔ | Tactical Forensic Intelligence</title>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- IDKit standalone — World ID widget -->
-  <script src="https://unpkg.com/@worldcoin/idkit-standalone@2.1.2/dist/idkit-standalone.js"></script>
   <style>
     :root {
       --bg: #050505; --surface: #0a0a0c; --border: #1a1a1e; --border-bright: #2a2a30;
@@ -265,7 +263,7 @@
   <div class="section-label">// Core Forensic Metrics</div>
   <div class="metrics-explain">
     <div class="metric-card"><div class="metric-name">FHS</div><div class="metric-full">Forensic Health Score</div><div class="metric-desc">Composite score aggregating all signals. Primary sorting key of the watchlist.</div><div class="metric-range">RANGE: 0.0 → 10.0 · ALERT BELOW 4.0</div></div>
-    <div class="metric-card"><div class="metric-name">NBP</div><div class="metric-full">Net Buying Pressure</div><div class="metric-desc">24h delta between buy and sell flows, normalized by volume. Detects accumulation vs distribution phases.</div><div class="metric-range">RANGE: -100% → +100%</div></div>
+    <div class="metric-card"><div class="metric-name">NBP</div><div class="metric-full">Net Buying Pressure</div><div class="metric-desc">24h delta between buy and sell flows, normalized by volume.</div><div class="metric-range">RANGE: -100% → +100%</div></div>
     <div class="metric-card"><div class="metric-name">ICR</div><div class="metric-full">Impact Crash Risk</div><div class="metric-desc">Estimated price drop if top holder exits. Computed from liquidity depth vs top wallet size.</div><div class="metric-range">THRESHOLD: &gt;1.5 CRITICAL</div></div>
     <div class="metric-card"><div class="metric-name">LCR</div><div class="metric-full">Liquidity Coverage Ratio</div><div class="metric-desc">Pool liquidity relative to market cap. Low LCR signals shallow, vulnerable market.</div><div class="metric-range">DANGER BELOW 30%</div></div>
     <div class="metric-card"><div class="metric-name">BPI</div><div class="metric-full">Breakout Potential Index</div><div class="metric-desc">Multi-factor signal combining volume surge, wallet accumulation and RSI divergence.</div><div class="metric-range">SIGNAL ABOVE 0.65</div></div>
@@ -326,7 +324,17 @@
   const WORLD_APP_ID   = "app_411ec21928d81bebe5be96beefdf732d";
   const WORLD_ACTION   = "access-0xdelta-dashboard";
   const VERIFY_API_URL = "http://34.14.53.149:5050/api/verify-human";
-  const SESS_KEY = "0xdelta_human_verified";
+  const SESS_KEY       = "0xdelta_human_verified";
+  const IDKIT_URL      = "https://unpkg.com/@worldcoin/idkit-standalone@2.1.2/build/index.global.js";
+
+  // Promise qui se résout quand window.IDKit est dispo
+  const idkitReady = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = IDKIT_URL;
+    s.onload = () => window.IDKit ? resolve(window.IDKit) : reject(new Error('window.IDKit not found'));
+    s.onerror = () => reject(new Error('IDKit failed to load'));
+    document.head.appendChild(s);
+  });
 
   function getSession() {
     try { const d = JSON.parse(sessionStorage.getItem(SESS_KEY)); if (!d || Date.now() > d.exp) return null; return d; } catch { return null; }
@@ -337,8 +345,7 @@
   function showVerified(level) {
     document.getElementById("unverified-state").style.display = "none";
     document.getElementById("verified-state").style.display  = "block";
-    const labels = { orb: "World ID · Orb Level · Full Access", device: "World ID · Device Level" };
-    document.getElementById("verify-level-text").textContent = labels[level] || "World ID Verified";
+    document.getElementById("verify-level-text").textContent = level === "orb" ? "World ID · Orb Level · Full Access" : "World ID · Device Level";
   }
   function toast(msg, err) {
     const t = document.getElementById("toast");
@@ -347,22 +354,28 @@
   }
 
   async function openWorldID() {
-    // Attendre que IDKit soit chargé (chargement async)
-    if (typeof IDKit === "undefined") {
-      toast("IDKit loading... retry in 1s");
-      setTimeout(openWorldID, 1000);
+    toast("Connecting to World ID...");
+    let kit;
+    try {
+      kit = await Promise.race([
+        idkitReady,
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000))
+      ]);
+    } catch(e) {
+      toast("Opening World App...");
+      window.open(`https://worldcoin.org/verify?app_id=${WORLD_APP_ID}&action=${WORLD_ACTION}&return_to=${encodeURIComponent(location.href)}`, "_blank");
       return;
     }
     try {
-      IDKit.init({
+      kit.init({
         app_id:             WORLD_APP_ID,
         action:             WORLD_ACTION,
         verification_level: "orb",
         onSuccess:          onWorldIDSuccess,
         handleVerify:       onWorldIDVerify,
-        onError:            e => toast("World ID error: " + e, true)
+        onError:            e => toast("World ID error: " + (e?.message || e), true)
       });
-      IDKit.open();
+      kit.open();
     } catch(e) { toast("IDKit error: " + e, true); }
   }
 
