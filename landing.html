@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>0xΔ | Tactical Forensic Intelligence</title>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- IDKit standalone — World ID widget -->
+  <script src="https://unpkg.com/@worldcoin/idkit-standalone@2.1.2/dist/idkit-standalone.js"></script>
   <style>
     :root {
       --bg: #050505; --surface: #0a0a0c; --border: #1a1a1e; --border-bright: #2a2a30;
@@ -67,7 +69,6 @@
     footer { padding: 24px 64px; border-top: 1px solid var(--border); background: var(--surface); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-ghost); font-family: 'JetBrains Mono', monospace; }
     footer .accent { color: var(--accent); }
     ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border-bright); } ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
     /* ── WORLD ID ── */
     #world-access { padding: 80px 64px; border-top: 1px solid var(--border); }
     .access-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 32px; margin-bottom: 40px; }
@@ -168,24 +169,16 @@
   <div class="section-label">// Workflow — Automated Pipeline · every 2h</div>
   <div style="font-family:'JetBrains Mono',monospace;">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-      <div style="border:1px solid #1e1e22;background:#0e0e10;padding:10px 18px;display:flex;align-items:baseline;gap:10px;">
-        <span style="font-size:15px;font-weight:700;color:var(--accent);">0 */2 * * *</span>
-        <span style="font-size:10px;color:#44444a;">run_pipeline.sh · GCP VPS · every 2h</span>
-      </div>
+      <div style="border:1px solid #1e1e22;background:#0e0e10;padding:10px 18px;display:flex;align-items:baseline;gap:10px;"><span style="font-size:15px;font-weight:700;color:var(--accent);">0 */2 * * *</span><span style="font-size:10px;color:#44444a;">run_pipeline.sh · GCP VPS · every 2h</span></div>
       <div style="flex:1;height:1px;background:#1a1a1e;"></div>
       <div style="font-size:9px;color:#44444a;letter-spacing:0.15em;text-transform:uppercase;">19 tokens · Base chain</div>
     </div>
     <div style="display:flex;flex-direction:column;gap:2px;">
       <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 0</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">Check open position</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Reads position.json — if position open &gt; T+90min, executes sell before proceeding.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">position.json</span><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">bankr API</span></div></div></div>
-      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 1</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">collector.py</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Fetches live data for 19 Base chain tokens. Wallet flows, holder distribution, liquidity, price action.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">Moralis</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">GeckoTerminal</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">Base chain</span></div></div></div>
-      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 2</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">report_builder.py</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Runs forensic_engine_v5 — computes 65+ metrics per token. Phase detection: EARLY_BREAKOUT, DISTRIBUTION, ACCUMULATION.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">FHS</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">NBP</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">ICR</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">65+ metrics</span></div></div></div>
-      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 3</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">request_analysis.py</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Loads .md memory + delta vs N-1 → CES ranking, entry zones, whale watch, full EN narrative. Outputs synthesis.json.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">Venice AI</span><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">Gemini 3 Flash Preview</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">→ synthesis.json</span></div></div></div>
-      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 3b</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">enter_new_position</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Token #1 from CES ranking → swap 75% ETH. Position saved with T+90min auto-close timer.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">bankr API</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">Base DEX</span></div></div></div>
-      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 5</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">Push GitHub Pages</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Publishes memory.json, synthesis.json to 0xdelta-hub. Frontend unlocks via x402 micropayment on Base.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">x402 · $0.02 USDC</span><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">x402 · $0.05 USDC</span></div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding:10px 16px;border:1px solid #1e1e22;background:#0e0e10;">
-      <div style="font-size:9px;color:#44444a;">Pipeline complete · duration ≈ 2–4 min · pipeline.log</div>
-      <div style="display:flex;gap:8px;"><span style="font-size:9px;padding:2px 10px;border:1px solid rgba(191,255,0,0.2);color:var(--accent);">dashboard · $0.02</span><span style="font-size:9px;padding:2px 10px;border:1px solid rgba(191,255,0,0.2);color:var(--accent);">synthesis · $0.05</span></div>
+      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 1</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">collector.py</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Fetches live data for 19 Base chain tokens.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">Moralis</span><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">GeckoTerminal</span></div></div></div>
+      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 2</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">forensic_engine_v5</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Computes 65+ metrics. Phase detection: EARLY_BREAKOUT, DISTRIBUTION, ACCUMULATION.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid #1e1e22;color:#44444a;">FHS · NBP · ICR · 65+ metrics</span></div></div></div>
+      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div><div style="flex:1;width:1px;background:#1e1e22;margin-top:5px;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 3</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">request_analysis.py</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">CES ranking, entry zones, whale watch, full EN narrative. Outputs synthesis.json.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">Venice AI · Gemini 3 Flash</span></div></div></div>
+      <div style="display:grid;grid-template-columns:32px 1fr;"><div style="display:flex;flex-direction:column;align-items:center;padding-top:18px;"><div style="width:6px;height:6px;border-radius:50%;background:#1e1e22;border:1px solid #2e2e34;flex-shrink:0;"></div></div><div style="background:#0e0e10;border:1px solid #1e1e22;padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;"><span style="font-size:9px;color:#44444a;">STEP 5</span><span style="font-size:13px;font-weight:700;color:#c8c8c8;font-family:'Bricolage Grotesque',sans-serif;">Push GitHub Pages</span></div><div style="font-size:11px;color:#555560;line-height:1.65;">Publishes memory.json, synthesis.json to 0xdelta-hub. x402 paywall on Base.</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;"><span style="font-size:9px;padding:2px 8px;border:1px solid rgba(191,255,0,0.25);color:var(--accent);">x402 · $0.02 / $0.05 USDC</span></div></div></div>
     </div>
   </div>
 </section>
@@ -249,14 +242,14 @@
     <div style="background:var(--bg);padding:40px;">
       <div style="font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:inline-block;padding:3px 12px;border:1px solid rgba(191,255,0,0.3);background:rgba(191,255,0,0.06);">Per-token forensic</div>
       <h2 style="font-size:clamp(28px,3.5vw,48px);font-weight:800;line-height:0.9;letter-spacing:-0.04em;text-transform:uppercase;margin-bottom:20px;">TOKEN<br>DASHBOARD</h2>
-      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:28px;">FHS scores always visible. Full per-token analysis — 65 metrics, ICR breakdown, wallet flows, LLM narrative, BPI signal, FHS history. Data refreshed <strong style="color:var(--text-main);">every 2 hours</strong>.</p>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:28px;">Full per-token analysis — 65 metrics, ICR breakdown, wallet flows, LLM narrative. Data refreshed <strong style="color:var(--text-main);">every 2 hours</strong>.</p>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:28px;"><span style="font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:700;color:var(--accent);">$0.02</span><span style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">USDC / session</span></div>
       <a href="index.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:var(--accent);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">Open Dashboard →</a>
     </div>
     <div style="background:var(--bg);padding:40px;border-left:1px solid var(--border);">
       <div style="font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);margin-bottom:20px;display:inline-block;padding:3px 12px;border:1px solid rgba(255,140,0,0.3);background:rgba(255,140,0,0.06);">Global synthesis · every 2h</div>
       <h2 style="font-size:clamp(28px,3.5vw,48px);font-weight:800;line-height:0.9;letter-spacing:-0.04em;text-transform:uppercase;margin-bottom:20px;">GLOBAL<br>SYNTHESIS</h2>
-      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:28px;">Every 2 hours, request_analysis.py cross-checks all 19 tokens — CES ranking, entry zones, whale watch and changes vs previous cycle. Full Venice AI narrative by <strong style="color:var(--text-main);">Gemini 3 Flash</strong>.</p>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:28px;">CES ranking, entry zones, whale watch and full Venice AI narrative by <strong style="color:var(--text-main);">Gemini 3 Flash</strong>. Download as .md.</p>
       <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:28px;"><span style="font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:700;color:var(--amber);">$0.05</span><span style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">USDC / session</span></div>
       <a href="report.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:var(--amber);color:#0a0a0c;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">Open Synthesis →</a>
     </div>
@@ -271,12 +264,12 @@
 <section id="metrics">
   <div class="section-label">// Core Forensic Metrics</div>
   <div class="metrics-explain">
-    <div class="metric-card"><div class="metric-name">FHS</div><div class="metric-full">Forensic Health Score</div><div class="metric-desc">Composite score aggregating all signals. Weights liquidity, flow quality, holder distribution and technical momentum.</div><div class="metric-range">RANGE: 0.0 → 10.0 · ALERT BELOW 4.0</div></div>
+    <div class="metric-card"><div class="metric-name">FHS</div><div class="metric-full">Forensic Health Score</div><div class="metric-desc">Composite score aggregating all signals. Primary sorting key of the watchlist.</div><div class="metric-range">RANGE: 0.0 → 10.0 · ALERT BELOW 4.0</div></div>
     <div class="metric-card"><div class="metric-name">NBP</div><div class="metric-full">Net Buying Pressure</div><div class="metric-desc">24h delta between buy and sell flows, normalized by volume. Detects accumulation vs distribution phases.</div><div class="metric-range">RANGE: -100% → +100%</div></div>
     <div class="metric-card"><div class="metric-name">ICR</div><div class="metric-full">Impact Crash Risk</div><div class="metric-desc">Estimated price drop if top holder exits. Computed from liquidity depth vs top wallet size.</div><div class="metric-range">THRESHOLD: &gt;1.5 CRITICAL</div></div>
-    <div class="metric-card"><div class="metric-name">LCR</div><div class="metric-full">Liquidity Coverage Ratio</div><div class="metric-desc">Pool liquidity relative to market cap. Low LCR signals shallow market, vulnerable to manipulation.</div><div class="metric-range">DANGER BELOW 30%</div></div>
+    <div class="metric-card"><div class="metric-name">LCR</div><div class="metric-full">Liquidity Coverage Ratio</div><div class="metric-desc">Pool liquidity relative to market cap. Low LCR signals shallow, vulnerable market.</div><div class="metric-range">DANGER BELOW 30%</div></div>
     <div class="metric-card"><div class="metric-name">BPI</div><div class="metric-full">Breakout Potential Index</div><div class="metric-desc">Multi-factor signal combining volume surge, wallet accumulation and RSI divergence.</div><div class="metric-range">SIGNAL ABOVE 0.65</div></div>
-    <div class="metric-card"><div class="metric-name">WCC</div><div class="metric-full">Whale Concentration Coefficient</div><div class="metric-desc">Gini-like measure of supply concentration across top 20 wallets. High WCC increases rug risk.</div><div class="metric-range">DANGER ABOVE 40%</div></div>
+    <div class="metric-card"><div class="metric-name">WCC</div><div class="metric-full">Whale Concentration Coefficient</div><div class="metric-desc">Gini-like measure of supply concentration across top 20 wallets.</div><div class="metric-range">DANGER ABOVE 40%</div></div>
   </div>
 </section>
 
@@ -290,18 +283,18 @@
       <div style="margin-bottom:20px;"><span class="agent-badge"><span class="dot"></span> 0xDelta · openclaw-agent · 34.14.53.149</span></div>
       <ul class="oc-list">
         <li><span><strong>0xDelta</strong> — Gemini 3 Flash. Skills: forensics + bankr + evm-wallet. Runs the full pipeline autonomously every 2 hours.</span></li>
-        <li><span><strong>Venice LLM</strong> — <span class="dim">Generates structured EN forensic sheets per token via PROMPT_ANALYSIS.md.</span></span></li>
+        <li><span><strong>Venice LLM</strong> — <span class="dim">Private inference. Generates structured EN forensic sheets via PROMPT_ANALYSIS.md.</span></span></li>
         <li><span><strong>Memory system</strong> — <span class="dim">PROFILE.md / PROJECTS.md / DECISIONS.md / ERRORS.md — persistent cognitive context.</span></span></li>
       </ul>
     </div>
     <div class="oc-card">
-      <div class="oc-subtitle">Automated Crons</div>
-      <div class="oc-title">4 Active Cron Jobs</div>
+      <div class="oc-subtitle">World ID Integration</div>
+      <div class="oc-title">Human-Anchored Trading</div>
       <ul class="oc-list" style="margin-top:20px;">
-        <li><span><strong>forensic_engine_v5.1</strong> — <span class="dim">Every 2h. Full 19-token scan. Push memory.json to GitHub Pages.</span></span></li>
-        <li><span><strong>export_memory_json.py v4</strong> — <span class="dim">Exports forensic_report (EN) from .md files into memory.json.</span></span></li>
-        <li><span><strong>telegram_alerts.py</strong> — <span class="dim">Real-time dispatch on critical signals: ICR_HIGH, WHALE_MOVE, SELL_WALL.</span></span></li>
-        <li><span><strong>PROMPT_ANALYSIS.md</strong> — <span class="dim">Venice LLM synthesis prompt. Generates structured EN forensic sheets.</span></span></li>
+        <li><span><strong>World ID ZK Proof</strong> — <span class="dim">Every swap decision is anchored to a verified unique human. Privacy-preserving.</span></span></li>
+        <li><span><strong>x402 Micropayments</strong> — <span class="dim">AI agents pay per request. Humans with World ID access for free.</span></span></li>
+        <li><span><strong>On-chain seal</strong> — <span class="dim">SHA256 hash of each forensic report published to Base blockchain before execution.</span></span></li>
+        <li><span><strong>AgentKit ready</strong> — <span class="dim">Built on World Chain AgentKit + Coinbase x402 v2 protocol.</span></span></li>
       </ul>
     </div>
   </div>
@@ -352,28 +345,40 @@
     t.textContent = msg; t.className = "toast" + (err ? " err" : "") + " show";
     setTimeout(() => t.classList.remove("show"), 4000);
   }
+
   async function openWorldID() {
+    // Attendre que IDKit soit chargé (chargement async)
     if (typeof IDKit === "undefined") {
-      toast("Opening World App...");
-      window.open(`https://worldcoin.org/verify?app_id=${WORLD_APP_ID}&action=${WORLD_ACTION}&return_to=${encodeURIComponent(location.href)}`, "_blank");
+      toast("IDKit loading... retry in 1s");
+      setTimeout(openWorldID, 1000);
       return;
     }
     try {
-      IDKit.init({ app_id: WORLD_APP_ID, action: WORLD_ACTION, verification_level: "orb", onSuccess: onWorldIDSuccess, handleVerify: onWorldIDVerify, onError: e => toast("World ID error: " + e, true) });
+      IDKit.init({
+        app_id:             WORLD_APP_ID,
+        action:             WORLD_ACTION,
+        verification_level: "orb",
+        onSuccess:          onWorldIDSuccess,
+        handleVerify:       onWorldIDVerify,
+        onError:            e => toast("World ID error: " + e, true)
+      });
       IDKit.open();
     } catch(e) { toast("IDKit error: " + e, true); }
   }
+
   async function onWorldIDVerify(proof) {
     const res  = await fetch(VERIFY_API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(proof) });
     const data = await res.json();
     if (!data.success) throw new Error(data.error || "Verification failed");
     setSession(data.nullifier_hash, data.verification_level || "orb");
   }
+
   function onWorldIDSuccess() {
     const s = getSession();
     showVerified(s?.level || "orb");
     toast("✅ Human verified — full access unlocked!");
   }
+
   document.addEventListener("DOMContentLoaded", () => { const s = getSession(); if (s) showVerified(s.level); });
 </script>
 </body>
