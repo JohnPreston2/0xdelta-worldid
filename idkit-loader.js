@@ -3,18 +3,17 @@
   const VERIFY_API_URL = "http://34.14.53.149:5050/api/verify-human";
   const SESS_KEY = "0xdelta_human_verified";
 
-  // Charger IDKit dynamiquement
-  function loadIDKit(callback) {
-    if (window.IDKit) { callback(); return; }
+  // Charge IDKit et résout quand window.IDKit est dispo
+  const idkitReady = new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = 'https://unpkg.com/@worldcoin/idkit-standalone@2.1.2/dist/idkit-standalone.js';
+    s.src = 'https://unpkg.com/@worldcoin/idkit-standalone@2.1.2/build/index.global.js';
     s.onload = () => {
-      // L'objet peut s'appeler IDKit ou window.IDKit
-      setTimeout(callback, 100); // petit délai pour init interne
+      if (window.IDKit) resolve(window.IDKit);
+      else reject(new Error('IDKit not found after load'));
     };
-    s.onerror = () => toast('IDKit load failed', true);
+    s.onerror = () => reject(new Error('IDKit script failed to load'));
     document.head.appendChild(s);
-  }
+  });
 
   function getSession() {
     try { const d = JSON.parse(sessionStorage.getItem(SESS_KEY)); if (!d || Date.now() > d.exp) return null; return d; } catch { return null; }
@@ -34,26 +33,27 @@
     setTimeout(() => t.classList.remove("show"), 4000);
   }
 
-  function openWorldID() {
-    loadIDKit(() => {
-      const kit = window.IDKit;
-      if (!kit) {
-        toast("World ID unavailable — opening World App...");
-        window.open(`https://worldcoin.org/verify?app_id=${WORLD_APP_ID}&action=${WORLD_ACTION}&return_to=${encodeURIComponent(location.href)}`, "_blank");
-        return;
-      }
-      try {
-        kit.init({
-          app_id:             WORLD_APP_ID,
-          action:             WORLD_ACTION,
-          verification_level: "orb",
-          onSuccess:          onWorldIDSuccess,
-          handleVerify:       onWorldIDVerify,
-          onError:            e => toast("World ID error: " + (e?.message || e), true)
-        });
-        kit.open();
-      } catch(e) { toast("IDKit error: " + e, true); }
-    });
+  async function openWorldID() {
+    toast("Loading World ID...");
+    let IDKit;
+    try {
+      IDKit = await idkitReady;
+    } catch(e) {
+      toast("World ID unavailable — opening World App...");
+      window.open(`https://worldcoin.org/verify?app_id=${WORLD_APP_ID}&action=${WORLD_ACTION}&return_to=${encodeURIComponent(location.href)}`, "_blank");
+      return;
+    }
+    try {
+      IDKit.init({
+        app_id:             WORLD_APP_ID,
+        action:             WORLD_ACTION,
+        verification_level: "orb",
+        onSuccess:          onWorldIDSuccess,
+        handleVerify:       onWorldIDVerify,
+        onError:            e => toast("World ID error: " + (e?.message || e), true)
+      });
+      IDKit.open();
+    } catch(e) { toast("IDKit error: " + e, true); }
   }
 
   async function onWorldIDVerify(proof) {
