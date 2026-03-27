@@ -774,7 +774,7 @@ async function loadReport() {
       data = await res.json();
     } catch {
       // Fallback: build from data_forensic.json
-      const res = await fetch('data_forensic.json?' + Date.now());
+      const res = await fetch('https://johnpreston2.github.io/0xdelta-hub/data_forensic.json?' + Date.now());
       const mem = await res.json();
       data = buildFromMemory(mem);
     }
