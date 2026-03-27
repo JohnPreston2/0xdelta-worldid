@@ -770,7 +770,7 @@ async function loadReport() {
     // Try synthesis.json first, fallback to data_forensic.json
     let data;
     try {
-      const res = await fetch('synthesis.json?' + Date.now());
+      const res = await fetch('https://johnpreston2.github.io/0xdelta-hub/synthesis.json?' + Date.now());
       data = await res.json();
     } catch {
       // Fallback: build from data_forensic.json
